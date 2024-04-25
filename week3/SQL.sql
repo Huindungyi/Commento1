@@ -47,19 +47,21 @@ FROM statistc.requestCode;
 SELECT *
 FROM statistc.users;
 
+# 월별 접속자 수:
 SELECT SUBSTR(createDate, 3, 2) AS month,
     COUNT(DISTINCT userID) AS monthly_logins
 FROM statistc.requestInfo
 GROUP BY SUBSTR(createDate, 3, 2)
 ORDER BY month;
 
-
+#일자별 접속자 수:
 SELECT SUBSTR(createDate, 1, 6) AS date,
     COUNT(DISTINCT userID) AS daily_logins
 FROM statistc.requestInfo
 GROUP BY SUBSTR(createDate, 1, 6)
 ORDER BY date;
 
+#평균 하루 로그인 수:
 SELECT AVG(login_count) AS avg_login_count
 FROM 
     (SELECT SUBSTR(createDate, 1, 8) AS date,
@@ -67,10 +69,8 @@ FROM
     FROM statistc.requestInfo
     GROUP BY SUBSTR(createDate, 1, 8)
     ) AS daily_logins;
-    
-    
 
-
+#휴일을 제외한 로그인 수:
 SELECT SUBSTR(createDate, 1, 6) AS date,
     COUNT(DISTINCT userID) AS logins_holidays_excluded
 FROM statistc.requestInfo
@@ -78,10 +78,10 @@ WHERE DATE_FORMAT(STR_TO_DATE(createDate, '%y%m%d%H%i'), '%w') NOT IN (0, 6)
 GROUP BY SUBSTR(createDate, 1, 6)
 ORDER BY date;
 
-
+#부서별 월별 로그인 수:
 SELECT u.HR_ORGAN AS department,
     SUBSTR(r.createDate, 3, 2) AS month,
-    COUNT(DISTINCT r.userID) AS login_count
+    COUNT(DISTINCT r.userID) AS dpt_login_count
 FROM statistc.requestInfo r
 INNER JOIN statistc.users u ON r.userID = u.userID
 GROUP BY u.HR_ORGAN, SUBSTR(r.createDate, 3, 2)

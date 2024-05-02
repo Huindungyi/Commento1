@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Year Statistic</title>
+</head>
+<body>
+    <h1>SQL Year Statistic</h1>
+    <form>
+        <label for="yearInput">Enter Year:</label>
+        <input type="text" id="yearInput" name="year">
+        <button type="button" onclick="getYearStatistic()">Get Statistic</button>
+    </form>
+    <p id="yearStatistic"></p>
+
+    <script>
+        function getYearStatistic() {
+            var year = document.getElementById('yearInput').value;
+            var url = 'http://localhost:8021/sqlyearStatistic?year=' + year;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('yearStatistic').innerText = JSON.stringify(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
